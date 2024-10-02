@@ -1,99 +1,3 @@
-/*using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-[RequireComponent(typeof(MeshFilter))]
-public class MeshGenerator : MonoBehaviour
-{
-    Mesh mesh;
-
-    Vector3[] vertices;
-    int[] triangles;
-
-    public int xSize = 40;
-    public int zSize = 40;
-
-    private int xOffset;
-    private int zOffset;
-
-    void Start()
-    {
-        xOffset = Random.Range(0, 9999);
-        zOffset = Random.Range(0, 9999);
-
-        mesh = new Mesh();
-        mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        GetComponent<MeshFilter>().mesh = mesh;
-
-        //StartCoroutine(CreateShape());
-        CreateShape();
-        UpdateMesh();
-        MeshCollider meshCollider = gameObject.AddComponent<MeshCollider>();
-        meshCollider.cookingOptions = MeshColliderCookingOptions.None;  // This disables the Fast Midphase.
-
-        
-    }
-
-    void Update()
-    {
-        //UpdateMesh();
-    }
-
-
-    //IEnumerator CreateShape()
-    void CreateShape()
-    {
-        vertices = new Vector3[(xSize + 1) * (zSize + 1)];
-
-        int i = 0;
-        for (int z = zOffset; z <= zSize + zOffset; z++)
-        {
-            for (int x = xOffset; x <= xSize + xOffset; x++)
-            {
-                float y1 = Mathf.PerlinNoise(x * .2f, z * .2f) * .5f;
-                float y2 = Mathf.PerlinNoise(x * .1f, z * .1f) * 2f;
-                float y3 = Mathf.PerlinNoise(x * .01f, z * .01f) * 60f;
-                float y4 = Mathf.PerlinNoise(x * .002f, z * .002f) * 200f;
-                float y = y1 + y2 + y3 + y4;
-                vertices[i] = new Vector3(x-xOffset, y, z-zOffset);
-                i++;
-            }
-        }
-
-        triangles = new int[xSize * zSize * 6];
-        int vert = 0;
-        int tris = 0;
-        for (int z = 0; z < zSize; z++)
-        {
-            for (int x = 0; x < xSize; x++)
-            {
-                triangles[tris + 0] = vert + 0;
-                triangles[tris + 1] = vert + xSize + 1;
-                triangles[tris + 2] = vert + 1;
-                triangles[tris + 3] = vert + 1;
-                triangles[tris + 4] = vert + xSize + 1;
-                triangles[tris + 5] = vert + xSize + 2;
-
-                vert++;
-                tris += 6;
-            }
-            vert++;
-            //yield return new WaitForSeconds(.004f);
-        }
-    }
-
-
-    void UpdateMesh()
-    {
-        mesh.Clear();
-
-        mesh.vertices = vertices;
-        mesh.triangles = triangles;
-
-        mesh.RecalculateNormals();
-    }
-}
-*/
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -141,17 +45,17 @@ public class MeshGenerator : MonoBehaviour
         mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         GetComponent<MeshFilter>().mesh = mesh;
 
-        StartCoroutine(CreateShape());
-        //UpdateMesh();
-        //MeshCollider meshCollider = gameObject.AddComponent<MeshCollider>();
+        CreateShape();
+        UpdateMesh();
+        MeshCollider meshCollider = gameObject.AddComponent<MeshCollider>();
         //meshCollider.cookingOptions = MeshColliderCookingOptions.None;
     }
 
     void Update() { 
-        UpdateMesh();
+        //UpdateMesh();
     }
 
-    IEnumerator CreateShape()
+    void CreateShape()
     {
         vertices = new Vector3[(xSize + 1) * (zSize + 1)];
 
@@ -200,7 +104,7 @@ public class MeshGenerator : MonoBehaviour
                 tris += 6;
             }
             vert++;
-            yield return new WaitForSeconds(yieldTime);
+            //yield return new WaitForSeconds(yieldTime);
         }
 
         

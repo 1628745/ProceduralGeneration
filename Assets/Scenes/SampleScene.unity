@@ -583,8 +583,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   yieldTime: 0.001
-  xSize: 750
-  zSize: 750
+  xSize: 500
+  zSize: 500
   baseFrequency: 0.15
   baseAmplitude: 5
   secondaryFrequency: 0.08
