@@ -10,9 +10,9 @@ public class PlayerMovement : MonoBehaviour
     //The player should be able to jump with the space bar.
     //The player has a rigidbody component attached to it.
 
-    public float speed = 5f;
-    public float jumpForce = 10f;
-    public float rotationSpeed = 100f;
+    public float speed = 5f; //45 seems good
+    public float speedMult = 1f; //3 seems good
+    public float rotationSpeed = 100f; //500 seems good
     public Camera cam;
 
     private Rigidbody rb;
@@ -33,15 +33,23 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 move = transform.right * x + transform.forward * z;
 
-        rb.MovePosition(transform.position + move * speed * Time.deltaTime);
-
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space))
         {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            rb.velocity = new Vector3(rb.velocity.x, speed, rb.velocity.z);
         }
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            rb.velocity = new Vector3(rb.velocity.x, -speed, rb.velocity.z);
+        }
+
+        rb.velocity = new Vector3(rb.velocity.x, Mathf.Lerp(rb.velocity.y, 0, Time.deltaTime), rb.velocity.z);
+
+        rb.velocity = new Vector3(move.x * speed * speedMult, rb.velocity.y, move.z * speed * speedMult);
 
         float mouseX = Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime;
         transform.Rotate(Vector3.up * mouseX);
+
         float mouseY = Input.GetAxis("Mouse Y") * rotationSpeed * Time.deltaTime;
         cam.transform.Rotate(Vector3.left * mouseY);
     }
