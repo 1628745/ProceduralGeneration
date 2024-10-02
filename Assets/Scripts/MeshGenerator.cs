@@ -45,7 +45,7 @@ public class MeshGenerator : MonoBehaviour
         mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         GetComponent<MeshFilter>().mesh = mesh;
 
-        CreateShape();
+        CreateShape(xOffset, zOffset);
         UpdateMesh();
         MeshCollider meshCollider = gameObject.AddComponent<MeshCollider>();
         //meshCollider.cookingOptions = MeshColliderCookingOptions.None;
@@ -55,14 +55,14 @@ public class MeshGenerator : MonoBehaviour
         //UpdateMesh();
     }
 
-    void CreateShape()
+    void CreateShape(int xOff, int zOff)
     {
         vertices = new Vector3[(xSize + 1) * (zSize + 1)];
 
         int i = 0;
-        for (int z = zOffset; z <= zSize + zOffset; z++)
+        for (int z = zOff; z <= zSize + zOff; z++)
         {
-            for (int x = xOffset; x <= xSize + xOffset; x++)
+            for (int x = xOff; x <= xSize + xOff; x++)
             {
                 // Multiple layers of noise for different scales of detail
                 float y1 = Mathf.PerlinNoise(x * baseFrequency, z * baseFrequency) * baseAmplitude;
@@ -79,7 +79,7 @@ public class MeshGenerator : MonoBehaviour
                 // Combine noise layers
                 float y = y1 + y2 + y3 + y4 + y5 + y6;
 
-                vertices[i] = new Vector3(x - xOffset, y, z - zOffset);
+                vertices[i] = new Vector3(x - xOff, y, z - zOff);
                 i++;
                 
             }
@@ -118,5 +118,14 @@ public class MeshGenerator : MonoBehaviour
         mesh.triangles = triangles;
 
         mesh.RecalculateNormals();
+    }
+
+    //Function to load in new chunk of terrain
+    public void LoadNewChunk(int x, int z)
+    {
+        int tempX = xOffset + x*xSize;
+        int tempZ = zOffset + z*zSize;
+
+
     }
 }
