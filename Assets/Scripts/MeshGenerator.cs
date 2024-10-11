@@ -6,6 +6,8 @@ public class MeshGenerator : MonoBehaviour
 {
     Vector3[] vertices;
     int[] triangles;
+    //Create an array that stores the coordinates that have already been loaded in
+    public List<Vector2> loadedChunks = new List<Vector2>();
 
     public int xSize = 40;
     public int zSize = 40;
@@ -43,6 +45,12 @@ public class MeshGenerator : MonoBehaviour
 
     public void CreateShape(int xOff, int zOff)
     {
+        //Check to see if the chunk has already been loaded in
+        if (loadedChunks.Contains(new Vector2(xOff, zOff)))
+        {
+            return;
+        }
+        loadedChunks.Add(new Vector2(xOff, zOff));
         vertices = new Vector3[(xSize + 1) * (zSize + 1)];
 
         int i = 0;
@@ -65,7 +73,7 @@ public class MeshGenerator : MonoBehaviour
                 // Combine noise layers
                 float y = y1 + y2 + y3 + y4 + y5 + y6;
 
-                vertices[i] = new Vector3(x - xOff * xSize + xOffset, y, z - zOff * zSize + zOffset);
+                vertices[i] = new Vector3(x - (xOff * xSize + xOffset), y, z - (zOff * zSize + zOffset));
                 i++;
                 
             }
