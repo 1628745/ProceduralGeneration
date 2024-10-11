@@ -13,9 +13,14 @@ public class PlayerMovement : MonoBehaviour
     public float speed = 5f; //45 seems good
     public float speedMult = 1f; //3 seems good
     public float rotationSpeed = 100f; //500 seems good
+    public int xSize = 50;
+    public int zSize = 50;  
     public Camera cam;
+    public MeshGenerator meshGen;
 
     private Rigidbody rb;
+
+    private Tuple<float, float> prevCoords;
 
     void Start()
     {
@@ -28,6 +33,20 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        //Check to see if current coords have passed into a new chunk seeing if prevCoords/500 != currentCoords/500
+        if (prevCoords != null)
+        {
+            if (Math.Floor(prevCoords.Item1 / xSize) != Math.Floor(rb.position.x / xSize) || Math.Floor(prevCoords.Item2 / zSize) != Math.Floor(rb.position.z / zSize))
+            {
+                Debug.Log("New Chunk");
+                Debug.Log(Math.Floor(rb.position.x / xSize) + " " + Math.Floor(rb.position.z / zSize));
+                //Load new chunk
+                int xCoord = (int)Math.Floor(rb.position.x / xSize);
+                int zCoord = (int)Math.Floor(rb.position.z / zSize);
+                meshGen.CreateShape(xCoord, zCoord);
+            }
+        }
+
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
@@ -52,5 +71,7 @@ public class PlayerMovement : MonoBehaviour
 
         float mouseY = Input.GetAxis("Mouse Y") * rotationSpeed * Time.deltaTime;
         cam.transform.Rotate(Vector3.left * mouseY);
+
+        prevCoords = new Tuple<float, float>(rb.position.x, rb.position.z);
     }
 }

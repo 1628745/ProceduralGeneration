@@ -2,15 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshFilter))]
 public class MeshGenerator : MonoBehaviour
 {
-    Mesh mesh;
-
     Vector3[] vertices;
     int[] triangles;
-
-    public float yieldTime = 0.01f;
 
     public int xSize = 40;
     public int zSize = 40;
@@ -36,33 +31,24 @@ public class MeshGenerator : MonoBehaviour
     public float ridgedNoiseFrequency = 0.05f;   // Ridged noise frequency
     public float ridgedNoiseAmplitude = 10f;     // Ridged noise amplitude
 
+    public GameObject meshLoaderPrefab;
+
     void Start()
     {
         xOffset = Random.Range(0, 9999);
         zOffset = Random.Range(0, 9999);
 
-        mesh = new Mesh();
-        mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        GetComponent<MeshFilter>().mesh = mesh;
-
-        CreateShape(xOffset, zOffset);
-        UpdateMesh();
-        MeshCollider meshCollider = gameObject.AddComponent<MeshCollider>();
-        //meshCollider.cookingOptions = MeshColliderCookingOptions.None;
+        CreateShape(0, 0);
     }
 
-    void Update() { 
-        //UpdateMesh();
-    }
-
-    void CreateShape(int xOff, int zOff)
+    public void CreateShape(int xOff, int zOff)
     {
         vertices = new Vector3[(xSize + 1) * (zSize + 1)];
 
         int i = 0;
-        for (int z = zOff; z <= zSize + zOff; z++)
+        for (int z = zOff * zSize + zOffset; z <= zSize + zOff * zSize + zOffset; z++)
         {
-            for (int x = xOff; x <= xSize + xOff; x++)
+            for (int x = xOff * xSize + xOffset; x <= xSize + xOff * xSize + xOffset; x++)
             {
                 // Multiple layers of noise for different scales of detail
                 float y1 = Mathf.PerlinNoise(x * baseFrequency, z * baseFrequency) * baseAmplitude;
@@ -79,11 +65,10 @@ public class MeshGenerator : MonoBehaviour
                 // Combine noise layers
                 float y = y1 + y2 + y3 + y4 + y5 + y6;
 
-                vertices[i] = new Vector3(x - xOff, y, z - zOff);
+                vertices[i] = new Vector3(x - xOff * xSize + xOffset, y, z - zOff * zSize + zOffset);
                 i++;
                 
             }
-            //yield return new WaitForSeconds(.001f);
         }
 
         triangles = new int[xSize * zSize * 6];
@@ -104,28 +89,15 @@ public class MeshGenerator : MonoBehaviour
                 tris += 6;
             }
             vert++;
-            //yield return new WaitForSeconds(yieldTime);
         }
-
-        
-    }
-
-    void UpdateMesh()
-    {
-        mesh.Clear();
-
-        mesh.vertices = vertices;
-        mesh.triangles = triangles;
-
-        mesh.RecalculateNormals();
-    }
-
-    //Function to load in new chunk of terrain
-    public void LoadNewChunk(int x, int z)
-    {
-        int tempX = xOffset + x*xSize;
-        int tempZ = zOffset + z*zSize;
-
+        GameObject meshLoader = Instantiate(meshLoaderPrefab, new Vector3(xOff * xSize, 0, zOff * zSize), Quaternion.identity);
+        MeshLoader meshLoaderScript = meshLoader.GetComponent<MeshLoader>();
+        meshLoaderScript.vertices = vertices;
+        meshLoaderScript.triangles = triangles;
+        meshLoaderScript.mesh = new Mesh();
+        meshLoaderScript.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        meshLoaderScript.GetComponent<MeshFilter>().mesh = meshLoader.GetComponent<MeshLoader>().mesh;
+        meshLoaderScript.UpdateMesh();
 
     }
 }
