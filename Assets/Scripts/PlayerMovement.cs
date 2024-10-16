@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     public int zSize = 50;  
     public Camera cam;
     public MeshGenerator meshGen;
+    public int renderDistance = 1;
 
     private Rigidbody rb;
 
@@ -43,7 +44,13 @@ public class PlayerMovement : MonoBehaviour
                 //Load new chunk
                 int xCoord = (int)Math.Floor(rb.position.x / xSize);
                 int zCoord = (int)Math.Floor(rb.position.z / zSize);
-                meshGen.CreateShape(xCoord, zCoord);
+                for (int i = -renderDistance; i <= renderDistance; i++)
+                {
+                    for (int j = -renderDistance; j <= renderDistance; j++)
+                    {
+                        meshGen.CreateShape(xCoord + i, zCoord + j);
+                    }
+                }
             }
         }
 
