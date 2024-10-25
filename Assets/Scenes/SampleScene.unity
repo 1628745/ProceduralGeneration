@@ -152,6 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4e3fd42e8792420aaa7ce1bcdd14a70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  loadedChunks: []
   xSize: 50
   zSize: 50
   baseFrequency: 0.15
@@ -254,6 +255,7 @@ MonoBehaviour:
   zSize: 50
   cam: {fileID: 0}
   meshGen: {fileID: 521482696}
+  renderDistance: 1
 --- !u!4 &554658197
 Transform:
   m_ObjectHideFlags: 0
