@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 521482698}
   - component: {fileID: 521482697}
   - component: {fileID: 521482696}
+  - component: {fileID: 521482699}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -153,6 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadedChunks: []
+  noiseFunction: {fileID: 521482699}
   xSize: 50
   zSize: 50
   baseFrequency: 0.15
@@ -191,6 +193,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &521482699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 521482695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7c46a65a22c8a64083e7ccc882cf5cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &554658194
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,7 +269,7 @@ MonoBehaviour:
   zSize: 50
   cam: {fileID: 0}
   meshGen: {fileID: 521482696}
-  renderDistance: 1
+  renderDistance: 10
 --- !u!4 &554658197
 Transform:
   m_ObjectHideFlags: 0
@@ -514,7 +528,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 753622032508552581, guid: 8eab9092e5c979b45ba23e975cc34569, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

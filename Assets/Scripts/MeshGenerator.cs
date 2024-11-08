@@ -8,6 +8,7 @@ public class MeshGenerator : MonoBehaviour
     int[] triangles;
     //Create an array that stores the coordinates that have already been loaded in
     public List<Vector2> loadedChunks = new List<Vector2>();
+    public NoiseFunction noiseFunction;
 
     public int xSize = 40;
     public int zSize = 40;
@@ -59,20 +60,20 @@ public class MeshGenerator : MonoBehaviour
             for (int x = xOff * xSize + xOffset; x <= xSize + xOff * xSize + xOffset; x++)
             {
                 // Multiple layers of noise for different scales of detail
-                float y1 = Mathf.PerlinNoise(x * baseFrequency, z * baseFrequency) * baseAmplitude;
-                float y2 = Mathf.PerlinNoise(x * secondaryFrequency, z * secondaryFrequency) * secondaryAmplitude;
-                float y3 = Mathf.PerlinNoise(x * detailFrequency, z * detailFrequency) * detailAmplitude;
-                float y4 = Mathf.PerlinNoise(x * largeScaleFrequency, z * largeScaleFrequency) * largeScaleAmplitude;
+                // float y1 = Mathf.PerlinNoise(x * baseFrequency, z * baseFrequency) * baseAmplitude;
+                // float y2 = Mathf.PerlinNoise(x * secondaryFrequency, z * secondaryFrequency) * secondaryAmplitude;
+                // float y3 = Mathf.PerlinNoise(x * detailFrequency, z * detailFrequency) * detailAmplitude;
+                // float y4 = Mathf.PerlinNoise(x * largeScaleFrequency, z * largeScaleFrequency) * largeScaleAmplitude;
 
-                // Finer detail noise
-                float y5 = Mathf.PerlinNoise(x * finerDetailFrequency, z * finerDetailFrequency) * finerDetailAmplitude;
+                // // Finer detail noise
+                // float y5 = Mathf.PerlinNoise(x * finerDetailFrequency, z * finerDetailFrequency) * finerDetailAmplitude;
 
-                // Ridged noise for more realistic terrain features like cliffs
-                float y6 = Mathf.Abs(0.5f - Mathf.PerlinNoise(x * ridgedNoiseFrequency, z * ridgedNoiseFrequency)) * ridgedNoiseAmplitude;
+                // // Ridged noise for more realistic terrain features like cliffs
+                // float y6 = Mathf.Abs(0.5f - Mathf.PerlinNoise(x * ridgedNoiseFrequency, z * ridgedNoiseFrequency)) * ridgedNoiseAmplitude;
 
-                // Combine noise layers
-                float y = y1 + y2 + y3 + y4 + y5 + y6;
-
+                // // Combine noise layers
+                // float y = y1 + y2 + y3 + y4 + y5 + y6;
+                float y = noiseFunction.noiseFunc(x, z);
                 vertices[i] = new Vector3(x - (xOff * xSize + xOffset), y, z - (zOff * zSize + zOffset));
                 i++;
                 
