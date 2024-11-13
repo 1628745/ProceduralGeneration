@@ -45,6 +45,11 @@ public class NoiseFunction : MonoBehaviour
 
 
     public float noiseFunc(int x, int z){
+        float height_value = base_height_noise.get_noise_2d(x, z);
+        float temperature_value = 1.0 - (temperature_noise.get_noise_2d(x, z) + 1.0) / 2.0;
+        float mountain_value = mountain_noise.get_noise_2d(x * mountain_scale, z * mountain_scale);
+        height_value -= mountain_value * ((mountainness_noise.get_noise_2d(x * mountain_scale, z * mountain_scale) + 1) / 2.0) * mountain_height_scale / (1.0 - height_value);
+        height_value *= pow(temperature_value, temperature_pow) * temperature_mul;
         return 20*noise.GetNoise(x, z);
     }
 }

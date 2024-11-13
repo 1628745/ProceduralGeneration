@@ -41,7 +41,7 @@ public class MeshGenerator : MonoBehaviour
         xOffset = Random.Range(0, 9999);
         zOffset = Random.Range(0, 9999);
 
-        CreateShape(0, 0);
+        //CreateShape(0, 0);
     }
 
     public void CreateShape(int xOff, int zOff)
