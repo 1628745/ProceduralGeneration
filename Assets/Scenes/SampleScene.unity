@@ -205,6 +205,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7c46a65a22c8a64083e7ccc882cf5cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mountain_scale: 0.5
+  mountain_height_scale: 2
+  temperature_mul: 1
+  temperature_pow: 0
+  elevation_amplitude: 180
 --- !u!1 &554658194
 GameObject:
   m_ObjectHideFlags: 0
@@ -269,7 +274,7 @@ MonoBehaviour:
   zSize: 50
   cam: {fileID: 0}
   meshGen: {fileID: 521482696}
-  renderDistance: 5
+  renderDistance: 25
 --- !u!4 &554658197
 Transform:
   m_ObjectHideFlags: 0
