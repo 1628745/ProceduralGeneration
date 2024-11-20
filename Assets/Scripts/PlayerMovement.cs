@@ -39,18 +39,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (Math.Floor(prevCoords.Item1 / xSize) != Math.Floor(rb.position.x / xSize) || Math.Floor(prevCoords.Item2 / zSize) != Math.Floor(rb.position.z / zSize))
             {
-                Debug.Log("New Chunk");
-                Debug.Log(Math.Floor(rb.position.x / xSize) + " " + Math.Floor(rb.position.z / zSize));
-                //Load new chunk
-                int xCoord = (int)Math.Floor(rb.position.x / xSize);
-                int zCoord = (int)Math.Floor(rb.position.z / zSize);
-                for (int i = -renderDistance; i <= renderDistance; i++)
-                {
-                    for (int j = -renderDistance; j <= renderDistance; j++)
-                    {
-                        meshGen.CreateShape(xCoord + i, zCoord + j);
-                    }
-                }
+                StartCoroutine(LoadChunks());
             }
         }
 
@@ -80,5 +69,22 @@ public class PlayerMovement : MonoBehaviour
         cam.transform.Rotate(Vector3.left * mouseY);
 
         prevCoords = new Tuple<float, float>(rb.position.x, rb.position.z);
+    }
+
+    //coroutine to load in chunks
+    IEnumerator LoadChunks(){
+        Debug.Log("New Chunk");
+        Debug.Log(Math.Floor(rb.position.x / xSize) + " " + Math.Floor(rb.position.z / zSize));
+        //Load new chunk
+        int xCoord = (int)Math.Floor(rb.position.x / xSize);
+        int zCoord = (int)Math.Floor(rb.position.z / zSize);
+        for (int i = -renderDistance; i <= renderDistance; i++)
+        {
+            for (int j = -renderDistance; j <= renderDistance; j++)
+            {
+                meshGen.CreateShape(xCoord + i, zCoord + j);
+                yield return null;
+            }
+        }
     }
 }

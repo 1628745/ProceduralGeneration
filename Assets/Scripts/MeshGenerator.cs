@@ -16,24 +16,6 @@ public class MeshGenerator : MonoBehaviour
     private int xOffset;
     private int zOffset;
 
-    public float baseFrequency = 0.2f;   // Controls frequency of main noise layer
-    public float baseAmplitude = 5f;     // Controls amplitude of main noise layer
-
-    public float secondaryFrequency = 0.1f;
-    public float secondaryAmplitude = 2f;
-
-    public float detailFrequency = 0.01f;
-    public float detailAmplitude = 60f;
-
-    public float largeScaleFrequency = 0.002f;
-    public float largeScaleAmplitude = 200f;
-
-    public float finerDetailFrequency = 0.005f;  // New finer detail frequency
-    public float finerDetailAmplitude = 20f;     // New finer detail amplitude
-
-    public float ridgedNoiseFrequency = 0.05f;   // Ridged noise frequency
-    public float ridgedNoiseAmplitude = 10f;     // Ridged noise amplitude
-
     public GameObject meshLoaderPrefab;
 
     void Start()
@@ -59,20 +41,6 @@ public class MeshGenerator : MonoBehaviour
         {
             for (int x = xOff * xSize + xOffset; x <= xSize + xOff * xSize + xOffset; x++)
             {
-                // Multiple layers of noise for different scales of detail
-                // float y1 = Mathf.PerlinNoise(x * baseFrequency, z * baseFrequency) * baseAmplitude;
-                // float y2 = Mathf.PerlinNoise(x * secondaryFrequency, z * secondaryFrequency) * secondaryAmplitude;
-                // float y3 = Mathf.PerlinNoise(x * detailFrequency, z * detailFrequency) * detailAmplitude;
-                // float y4 = Mathf.PerlinNoise(x * largeScaleFrequency, z * largeScaleFrequency) * largeScaleAmplitude;
-
-                // // Finer detail noise
-                // float y5 = Mathf.PerlinNoise(x * finerDetailFrequency, z * finerDetailFrequency) * finerDetailAmplitude;
-
-                // // Ridged noise for more realistic terrain features like cliffs
-                // float y6 = Mathf.Abs(0.5f - Mathf.PerlinNoise(x * ridgedNoiseFrequency, z * ridgedNoiseFrequency)) * ridgedNoiseAmplitude;
-
-                // // Combine noise layers
-                // float y = y1 + y2 + y3 + y4 + y5 + y6;
                 float y = noiseFunction.noiseFunc(x, z);
                 vertices[i] = new Vector3(x - (xOff * xSize + xOffset), y, z - (zOff * zSize + zOffset));
                 i++;
