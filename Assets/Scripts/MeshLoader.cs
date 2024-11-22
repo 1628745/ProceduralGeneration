@@ -7,13 +7,18 @@ public class MeshLoader : MonoBehaviour
 {
     public Mesh mesh;
 
+    [HideInInspector]
     public Vector3[] vertices;
+    [HideInInspector]
     public int[] triangles;
-    void Start()
-    {
-    }
+    [HideInInspector]
+    public Dictionary<Vector2, GameObject> meshDict;
+    public Vector2 chunkCoords;
 
-    void Update() {
+    public void SetDict( Dictionary<Vector2, GameObject> dict, Vector2 coords)
+    {
+        meshDict = dict;
+        chunkCoords = coords;
     }
 
     public void UpdateMesh()
@@ -24,6 +29,23 @@ public class MeshLoader : MonoBehaviour
         mesh.triangles = triangles;
 
         mesh.RecalculateNormals();
-        //gameObject.AddComponent<MeshCollider>();
+        //recalculate normals of surrounding meshes
+        /*if (meshDict.ContainsKey(chunkCoords + new Vector2(1, 0)))
+        {
+            meshDict[chunkCoords + new Vector2(1, 0)].GetComponent<MeshLoader>().mesh.RecalculateTangents();
+            Debug.Log("This thing done runned");
+        }   
+        if (meshDict.ContainsKey(chunkCoords + new Vector2(-1, 0)))
+        {
+            meshDict[chunkCoords + new Vector2(-1, 0)].GetComponent<MeshLoader>().mesh.RecalculateTangents();
+        }
+        if (meshDict.ContainsKey(chunkCoords + new Vector2(0, 1)))
+        {
+            meshDict[chunkCoords + new Vector2(0, 1)].GetComponent<MeshLoader>().mesh.RecalculateTangents();
+        }
+        if (meshDict.ContainsKey(chunkCoords + new Vector2(0, -1)))
+        {
+            meshDict[chunkCoords + new Vector2(0, -1)].GetComponent<MeshLoader>().mesh.RecalculateTangents();
+        }*/
     }
 }

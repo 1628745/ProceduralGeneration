@@ -22,6 +22,9 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody rb;
 
     private Tuple<float, float> prevCoords;
+    private bool coroutineRunning = false;
+    //variable to keep track of queued chunks
+    private List<Tuple<float, float>> queuedChunks = new List<Tuple<float, float>>();
 
     void Start()
     {
@@ -39,8 +42,15 @@ public class PlayerMovement : MonoBehaviour
         {
             if (Math.Floor(prevCoords.Item1 / xSize) != Math.Floor(rb.position.x / xSize) || Math.Floor(prevCoords.Item2 / zSize) != Math.Floor(rb.position.z / zSize))
             {
-                StartCoroutine(LoadChunks());
+                queuedChunks.Add(new Tuple<float, float>(rb.position.x, rb.position.z));
             }
+        }
+
+        if (!coroutineRunning && queuedChunks.Count > 0)
+        {
+            coroutineRunning = true;
+            StartCoroutine(LoadChunks(queuedChunks[0].Item1, queuedChunks[0].Item2));
+            queuedChunks.RemoveAt(0);
         }
 
         float x = Input.GetAxis("Horizontal");
@@ -62,22 +72,22 @@ public class PlayerMovement : MonoBehaviour
 
         rb.velocity = new Vector3(move.x * speed * speedMult, rb.velocity.y, move.z * speed * speedMult);
 
-        float mouseX = Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime;
+        float mouseX = Input.GetAxis("Mouse X") * rotationSpeed;
         transform.Rotate(Vector3.up * mouseX);
 
-        float mouseY = Input.GetAxis("Mouse Y") * rotationSpeed * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * rotationSpeed;
         cam.transform.Rotate(Vector3.left * mouseY);
 
         prevCoords = new Tuple<float, float>(rb.position.x, rb.position.z);
     }
 
     //coroutine to load in chunks
-    IEnumerator LoadChunks(){
+    IEnumerator LoadChunks(float xVal, float zVal){
         Debug.Log("New Chunk");
-        Debug.Log(Math.Floor(rb.position.x / xSize) + " " + Math.Floor(rb.position.z / zSize));
+        Debug.Log(Math.Floor(xVal / xSize) + " " + Math.Floor(zVal / zSize));
         //Load new chunk
-        int xCoord = (int)Math.Floor(rb.position.x / xSize);
-        int zCoord = (int)Math.Floor(rb.position.z / zSize);
+        int xCoord = (int)Math.Floor(xVal / xSize);
+        int zCoord = (int)Math.Floor(zVal / zSize);
         for (int i = -renderDistance; i <= renderDistance; i++)
         {
             for (int j = -renderDistance; j <= renderDistance; j++)
@@ -86,5 +96,6 @@ public class PlayerMovement : MonoBehaviour
                 yield return null;
             }
         }
+        coroutineRunning = false;
     }
 }

@@ -18,6 +18,9 @@ public class MeshGenerator : MonoBehaviour
 
     public GameObject meshLoaderPrefab;
 
+    [HideInInspector]
+    public Dictionary<Vector2, GameObject> meshDict = new Dictionary<Vector2, GameObject>();
+
     void Start()
     {
         xOffset = Random.Range(0, 9999);
@@ -68,7 +71,9 @@ public class MeshGenerator : MonoBehaviour
             vert++;
         }
         GameObject meshLoader = Instantiate(meshLoaderPrefab, new Vector3(xOff * xSize, 0, zOff * zSize), Quaternion.identity);
+        meshDict.Add(new Vector2(xOff, zOff), meshLoader);
         MeshLoader meshLoaderScript = meshLoader.GetComponent<MeshLoader>();
+        meshLoaderScript.SetDict(meshDict, new Vector2(xOff, zOff));
         meshLoaderScript.vertices = vertices;
         meshLoaderScript.triangles = triangles;
         meshLoaderScript.mesh = new Mesh();

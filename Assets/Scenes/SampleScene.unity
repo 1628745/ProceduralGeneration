@@ -257,12 +257,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 45
   speedMult: 3
-  rotationSpeed: 500
+  rotationSpeed: 1
   xSize: 50
   zSize: 50
   cam: {fileID: 0}
   meshGen: {fileID: 521482696}
-  renderDistance: 5
+  renderDistance: 50
 --- !u!4 &554658197
 Transform:
   m_ObjectHideFlags: 0
@@ -498,8 +498,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
+  near clip plane: 2.95
+  far clip plane: 10000
   field of view: 60
   orthographic: 0
   orthographic size: 5
