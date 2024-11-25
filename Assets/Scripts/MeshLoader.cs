@@ -8,6 +8,9 @@ public class MeshLoader : MonoBehaviour
     public Mesh mesh;
 
     [HideInInspector]
+    public Vector2[] uvs;
+
+    [HideInInspector]
     public Vector3[] vertices;
     [HideInInspector]
     public int[] triangles;
@@ -27,6 +30,7 @@ public class MeshLoader : MonoBehaviour
 
         mesh.vertices = vertices;
         mesh.triangles = triangles;
+        mesh.uv = uvs;
 
         mesh.RecalculateNormals();
         //recalculate normals of surrounding meshes
