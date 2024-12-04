@@ -6,6 +6,8 @@ using UnityEngine;
 public class MeshLoader : MonoBehaviour
 {
     public Mesh mesh;
+    public Material grass;
+    public Material rock;
 
     [HideInInspector]
     public Vector2[] uvs;
@@ -28,28 +30,22 @@ public class MeshLoader : MonoBehaviour
     {
         mesh.Clear();
 
+        
+
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.uv = uvs;
 
+
+        //Set mesh material based on height
+        if (vertices[0].y > 250)
+        {
+            GetComponent<MeshRenderer>().material = rock;
+        }
+        else
+        {
+            GetComponent<MeshRenderer>().material = grass;
+        }
         mesh.RecalculateNormals();
-        //recalculate normals of surrounding meshes
-        /*if (meshDict.ContainsKey(chunkCoords + new Vector2(1, 0)))
-        {
-            meshDict[chunkCoords + new Vector2(1, 0)].GetComponent<MeshLoader>().mesh.RecalculateTangents();
-            Debug.Log("This thing done runned");
-        }   
-        if (meshDict.ContainsKey(chunkCoords + new Vector2(-1, 0)))
-        {
-            meshDict[chunkCoords + new Vector2(-1, 0)].GetComponent<MeshLoader>().mesh.RecalculateTangents();
-        }
-        if (meshDict.ContainsKey(chunkCoords + new Vector2(0, 1)))
-        {
-            meshDict[chunkCoords + new Vector2(0, 1)].GetComponent<MeshLoader>().mesh.RecalculateTangents();
-        }
-        if (meshDict.ContainsKey(chunkCoords + new Vector2(0, -1)))
-        {
-            meshDict[chunkCoords + new Vector2(0, -1)].GetComponent<MeshLoader>().mesh.RecalculateTangents();
-        }*/
     }
 }
