@@ -97,8 +97,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mesh: {fileID: 0}
-  grass: {fileID: 2100000, guid: 0696142d423eb2340b6149c434e5e0bc, type: 2}
-  rock: {fileID: 2100000, guid: 9fe2c9ac9a443334db653671b9136d84, type: 2}
+  grass: {fileID: -876546973899608171, guid: 6c047470549dece4e9833d77b11913df, type: 3}
+  rock: {fileID: -876546973899608171, guid: 6c047470549dece4e9833d77b11913df, type: 3}
   uvs: []
   vertices: []
   triangles: 
