@@ -30,12 +30,12 @@ public class MeshGenerator : MonoBehaviour
         //CreateShape(0, 0);
     }
 
-    public void CreateShape(int xOff, int zOff)
+    public bool CreateShape(int xOff, int zOff) //Returns false if the chunk has already been loaded in else true
     {
         //Check to see if the chunk has already been loaded in
         if (loadedChunks.Contains(new Vector2(xOff, zOff)))
         {
-            return;
+            return false;
         }
         loadedChunks.Add(new Vector2(xOff, zOff));
         vertices = new Vector3[(xSize + 3) * (zSize + 3)];
@@ -94,6 +94,6 @@ public class MeshGenerator : MonoBehaviour
         meshLoaderScript.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         meshLoaderScript.GetComponent<MeshFilter>().mesh = meshLoader.GetComponent<MeshLoader>().mesh;
         meshLoaderScript.UpdateMesh();
-
+        return true;
     }
 }

@@ -577,7 +577,7 @@ MonoBehaviour:
   zSize: 50
   cam: {fileID: 0}
   meshGen: {fileID: 521482696}
-  renderDistance: 5
+  renderDistance: 15
 --- !u!4 &554658197
 Transform:
   m_ObjectHideFlags: 0
