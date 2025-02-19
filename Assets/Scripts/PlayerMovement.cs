@@ -168,8 +168,10 @@ public class PlayerMovement : MonoBehaviour
         {
             for (int j = -renderDistance; j <= renderDistance; j++)
             {
-                meshGen.CreateShape(xCoord + i, zCoord + j);
-                yield return null;
+                if (meshGen.CreateShape(xCoord + i, zCoord + j))
+                {
+                    yield return null;
+                }
             }
         }
         coroutineRunning = false;
