@@ -99,6 +99,7 @@ MonoBehaviour:
   mesh: {fileID: 0}
   grass: {fileID: -876546973899608171, guid: 6c047470549dece4e9833d77b11913df, type: 3}
   rock: {fileID: -876546973899608171, guid: 6c047470549dece4e9833d77b11913df, type: 3}
+  testNew: {fileID: 2100000, guid: 7c7f2e5511c941847a207bfa8debe87c, type: 2}
   uvs: []
   vertices: []
   triangles: 

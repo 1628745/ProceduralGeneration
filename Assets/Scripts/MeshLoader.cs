@@ -8,6 +8,7 @@ public class MeshLoader : MonoBehaviour
     public Mesh mesh;
     public Material grass;
     public Material rock;
+    public Material testNew;
 
     [HideInInspector]
     public Vector2[] uvs;
@@ -36,7 +37,8 @@ public class MeshLoader : MonoBehaviour
         mesh.triangles = triangles;
         mesh.uv = uvs;
 
-
+        
+        /*
         //Set mesh material based on height
         if (vertices[0].y > 250)
         {
@@ -46,6 +48,10 @@ public class MeshLoader : MonoBehaviour
         {
             GetComponent<MeshRenderer>().material = grass;
         }
+        */
+        GetComponent<MeshRenderer>().material = testNew;
         mesh.RecalculateNormals();
+        
+
     }
 }
