@@ -45,6 +45,7 @@ Shader "Custom/SlopeBlendedTerrain"
                 float slope = saturate(v.normal.y); // y = 1 for flat, y = 0 for vertical
                 o.slopeFactor = pow(slope, _BlendSharpness); // Sharpen transition
 
+
                 return o;
             }
 
@@ -53,8 +54,9 @@ Shader "Custom/SlopeBlendedTerrain"
                 fixed4 grass = tex2D(_GrassTex, i.uv);
                 fixed4 rock = tex2D(_RockTex, i.uv);
 
-                // Blend between textures based on slope
-                return lerp(rock, grass, i.slopeFactor);
+                // Use step function such that slopeFactor < 0.25 -> grass, slopeFactor > 0.75 -> rock
+                fixed4 result = lerp(rock, grass, step(0.5, i.slopeFactor));
+                return result;
             }
             ENDCG
         }
