@@ -5,6 +5,9 @@ Shader "Custom/SlopeBlendedTerrain"
         _GrassTex ("Grass Texture", 2D) = "white" {}
         _RockTex ("Rock Texture", 2D) = "white" {}
         _BlendSharpness ("Blend Sharpness", Range(0, 10)) = 4
+        _SnowHeight ("Snow Height Threshold", Float) = 10000
+        _SnowColor ("Snow Color", Color) = (0,1,1,1)
+
     }
     SubShader
     {
@@ -29,11 +32,15 @@ Shader "Custom/SlopeBlendedTerrain"
                 float4 pos : SV_POSITION;
                 float2 uv : TEXCOORD0;
                 float slopeFactor : TEXCOORD1;
+                float worldY : TEXCOORD2;
             };
 
             sampler2D _GrassTex;
             sampler2D _RockTex;
             float _BlendSharpness;
+            float _SnowHeight;
+            fixed4 _SnowColor;
+
 
             v2f vert (appdata_t v)
             {
@@ -41,10 +48,13 @@ Shader "Custom/SlopeBlendedTerrain"
                 o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
 
+                // Convert object-space vertex position to world-space
+                float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+                o.worldY = worldPos.y;
+
                 // Calculate slope factor based on normal's Y component
                 float slope = saturate(v.normal.y); // y = 1 for flat, y = 0 for vertical
-                o.slopeFactor = pow(slope, _BlendSharpness); // Sharpen transition
-
+                o.slopeFactor = pow(slope, _BlendSharpness); // Sharpen transition  
 
                 return o;
             }
@@ -53,10 +63,16 @@ Shader "Custom/SlopeBlendedTerrain"
             {
                 fixed4 grass = tex2D(_GrassTex, i.uv);
                 fixed4 rock = tex2D(_RockTex, i.uv);
+                
+                float snowFactor = step(_SnowHeight, i.worldY);
+
+                // mix snow with grass such that snowFactor = 1 -> snow, snowFactor = 0 -> grass
+                fixed4 snowedGrass = lerp(grass, _SnowColor, snowFactor);
 
                 // Use step function such that slopeFactor < 0.25 -> grass, slopeFactor > 0.75 -> rock
-                fixed4 result = lerp(rock, grass, step(0.5, i.slopeFactor));
+                fixed4 result = lerp(rock, snowedGrass, step(0.5, i.slopeFactor));
                 return result;
+                
             }
             ENDCG
         }
