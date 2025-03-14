@@ -5,7 +5,7 @@ Shader "Custom/SlopeBlendedTerrain"
         _GrassTex ("Grass Texture", 2D) = "white" {}
         _RockTex ("Rock Texture", 2D) = "white" {}
         _BlendSharpness ("Blend Sharpness", Range(0, 10)) = 4
-        _SnowHeight ("Snow Height Threshold", Float) = 10000
+        _SnowHeight ("Snow Height Threshold", Float) = 400
         _SnowColor ("Snow Color", Color) = (0,1,1,1)
 
     }
