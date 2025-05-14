@@ -5,8 +5,11 @@ Shader "Custom/SlopeBlendedTerrain"
         _GrassTex ("Grass Texture", 2D) = "white" {}
         _RockTex ("Rock Texture", 2D) = "white" {}
         _BlendSharpness ("Blend Sharpness", Range(0, 10)) = 4
-        _SnowHeight ("Snow Height Threshold", Float) = 400
+        _SnowHeight ("Snow Height Threshold", Float) = 350
         _SnowColor ("Snow Color", Color) = (0,1,1,1)
+        _SandTex ("Sand Texture", 2D) = "white" {}
+        _SandHeight ("Sand Height Threshold", Float) = 80
+
 
     }
     SubShader
@@ -33,13 +36,18 @@ Shader "Custom/SlopeBlendedTerrain"
                 float2 uv : TEXCOORD0;
                 float slopeFactor : TEXCOORD1;
                 float worldY : TEXCOORD2;
+                float2 worldXZ : TEXCOORD3;
             };
+
 
             sampler2D _GrassTex;
             sampler2D _RockTex;
             float _BlendSharpness;
             float _SnowHeight;
             fixed4 _SnowColor;
+            sampler2D _SandTex;
+            float _SandHeight;
+
 
 
             v2f vert (appdata_t v)
@@ -48,32 +56,45 @@ Shader "Custom/SlopeBlendedTerrain"
                 o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
 
-                // Convert object-space vertex position to world-space
                 float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
                 o.worldY = worldPos.y;
+                o.worldXZ = worldPos.xz;
 
-                // Calculate slope factor based on normal's Y component
-                float slope = saturate(v.normal.y); // y = 1 for flat, y = 0 for vertical
-                o.slopeFactor = pow(slope, _BlendSharpness); // Sharpen transition  
+                float slope = saturate(v.normal.y);
+                o.slopeFactor = pow(slope, _BlendSharpness);
 
                 return o;
             }
+
 
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 grass = tex2D(_GrassTex, i.uv);
                 fixed4 rock = tex2D(_RockTex, i.uv);
-                
-                float snowFactor = step(_SnowHeight, i.worldY);
+                fixed4 sand = tex2D(_SandTex, i.uv);
 
-                // mix snow with grass such that snowFactor = 1 -> snow, snowFactor = 0 -> grass
-                fixed4 snowedGrass = lerp(grass, _SnowColor, snowFactor);
+                // Base slope blend: rock for steep, grass for flat
+                float slopeBlend = smoothstep(0.4, 0.8, i.slopeFactor);
+                fixed4 baseTerrain = lerp(rock, grass, slopeBlend);
 
-                // Use step function such that slopeFactor < 0.25 -> grass, slopeFactor > 0.75 -> rock
-                fixed4 result = lerp(rock, snowedGrass, step(0.5, i.slopeFactor));
-                return result;
-                
+                // Natural variation using world XZ (worldXZ.xy)
+                float variation = sin(i.worldXZ.x * 0.01) * cos(i.worldXZ.y * 0.01) * 10.0;
+
+                // --- Snow ---
+                float snowFactor = smoothstep(_SnowHeight - 10 + variation, _SnowHeight + 10 + variation, i.worldY);
+                fixed4 snowBlended = lerp(baseTerrain, _SnowColor, snowFactor);
+
+                // --- Sand blending ---
+                // Fade in sand below a certain height, mixed with base terrain
+                /*float sandBlendFactor = smoothstep(_SandHeight + 10 + variation, _SandHeight - 10 + variation, i.worldY);
+                fixed4 sandBlended = lerp(snowBlended, sand, sandBlendFactor);*/
+
+                return snowBlended;
             }
+
+
+
+
             ENDCG
         }
     }
